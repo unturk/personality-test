@@ -1,6 +1,9 @@
 package com.galaksiya.utils;
 
 public class TestConstants {
+	public static final String TEST_ANSWER_VALUE_1 = "important";
+	public static final String TEST_ANSWER_VALUE_2 = "very important";
+	public static final String TEST_ANSWER_VALUE_3 = "50";
 	public static final String TEST_CAT_NAME_1 = "Hard Fact";
 	public static final String TEST_CAT_CODE_1 = "hard_fact";
 	public static final String TEST_CAT_NAME_2 = "Life Style";
@@ -13,4 +16,5 @@ public class TestConstants {
 	public static final String TEST_QUESTION_DETAILS_1 = "{\"range\":{\"from\":18,\"to\":40}}";
 	public static final String TEST_QUESTION_DETAILS_2 = "{\"options\":[\"not important\",\"important\"]," +
 		"\"condition\":{\"operator\":\"equals\",\"value\":\"important\"}}";
+	public static final String TEST_USER_KEY_1 = "testKey";
 }

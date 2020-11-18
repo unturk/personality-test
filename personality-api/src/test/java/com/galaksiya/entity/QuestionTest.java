@@ -29,12 +29,12 @@ public class QuestionTest {
 
 		// Assert.
 		assertNotNull("Serializing object to JSON has been failed!", questionJson);
-		assertTrue("Serialized object must contain a Id field!", questionJson.has(ID));
+		assertTrue("Serialized object must contain a id field!", questionJson.has(ID));
 		assertTrue("Serialized object must contain a value field!", questionJson.has(VALUE));
 		assertTrue("Serialized object must contain a category field!", questionJson.has(CATEGORY));
 		assertTrue("Serialized object must contain a child field!", questionJson.has(CHILD));
 		assertTrue("Serialized object must contain a details field!", questionJson.has(DETAILS));
-		assertTrue("Serialized object must contain a details field!", questionJson.has(QUESTION_TYPE));
+		assertTrue("Serialized object must contain a question type field!", questionJson.has(QUESTION_TYPE));
 	}
 
 	@Test

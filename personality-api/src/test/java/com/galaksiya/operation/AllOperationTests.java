@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({CategoryOperationTest.class, QuestionOperationTest.class})
+@Suite.SuiteClasses({AnswerOperationTest.class, AnswerGroupOperationTest.class, CategoryOperationTest.class,
+	QuestionOperationTest.class})
 public class AllOperationTests {
 }

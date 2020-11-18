@@ -1,9 +1,7 @@
 package com.galaksiya.utils;
 
 import com.galaksiya.db.DatabaseConnector;
-import com.galaksiya.entity.Category;
-import com.galaksiya.entity.Question;
-import com.galaksiya.entity.QuestionType;
+import com.galaksiya.entity.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +12,26 @@ public class TestUtils {
 
 	public static List<Integer> categoriesToDelete = new ArrayList<>();
 	public static List<Integer> questionsToDelete = new ArrayList<>();
+	public static List<Integer> answerGroupsToDelete = new ArrayList<>();
+	public static List<Integer> answersToDelete = new ArrayList<>();
+
+	public static AnswerGroup addAnswerGroup(String userKey) {
+		AnswerGroup answerGroup = new AnswerGroup(userKey);
+		int id = connector.saveObject(answerGroup);
+		answerGroupsToDelete.add(id);
+		answerGroup.setId(id);
+		return answerGroup;
+	}
+
+	public static void deleteAllAnswerGroups() {
+		answerGroupsToDelete.forEach(answerGroupId -> {
+			try {
+				connector.deleteObject(answerGroupId, AnswerGroup.class);
+			} catch (Exception ignored) {
+			}
+		});
+		answerGroupsToDelete.clear();
+	}
 
 	public static Category addCategory(String name, String code) {
 		Category category = new Category(name, code);
@@ -31,6 +49,24 @@ public class TestUtils {
 			}
 		});
 		categoriesToDelete.clear();
+	}
+
+	public static Answer addAnswer(String value, Question question, AnswerGroup answerGroup) {
+		Answer answer = new Answer(value, question, answerGroup);
+		int id = connector.saveObject(answer);
+		answersToDelete.add(id);
+		answer.setId(id);
+		return answer;
+	}
+
+	public static void deleteAllAnswers() {
+		answersToDelete.forEach(answerId -> {
+			try {
+				connector.deleteObject(answerId, Answer.class);
+			} catch (Exception ignored) {
+			}
+		});
+		answersToDelete.clear();
 	}
 
 	public static Question addQuestion(String value, String details, Category category, QuestionType questionType,
