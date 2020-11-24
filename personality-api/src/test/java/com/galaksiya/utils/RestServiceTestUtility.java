@@ -19,16 +19,9 @@ public class RestServiceTestUtility {
 		return getParser().parse(request.get(String.class)).getAsJsonObject();
 	}
 
-	public static JsonObject sendDeleteRequest(Invocation.Builder request) {
-		return getParser().parse(request.delete(String.class)).getAsJsonObject();
-	}
 
 	public static JsonObject sendPostRequest(Invocation.Builder request, JsonObject requestJson) {
 		return getParser().parse(request.post(Entity.json(requestJson.toString()), String.class)).getAsJsonObject();
-	}
-
-	public static JsonObject sendPutRequest(Invocation.Builder request, JsonObject requestJson) {
-		return getParser().parse(request.put(Entity.json(requestJson.toString()), String.class)).getAsJsonObject();
 	}
 
 }

@@ -41,7 +41,7 @@ public class AnswerService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response saveAnswers(String data, @Context HttpServletRequest request) {
-		JsonObject response = new JsonObject();
+		Response response;
 		OperationLog log = logger.startOperation("saveAnswers")
 			.addField(IP_ADDRESS, RestUtils.getIpAddress(request)).addField(DATA, data);
 		try {
@@ -50,12 +50,12 @@ public class AnswerService {
 			String userKey = dataJson.has(USER_KEY) ? dataJson.get(USER_KEY).getAsString() : UUID.randomUUID()
 				.toString();
 			processAnswerTransaction(answers, userKey);
-			response.addProperty(SUCCESS, true);
+			response = RestUtils.createResponseOK(null);
 			log.succeed();
 		} catch (Throwable t) {
-			response = RestUtils.handleException(t, log);
+			response = RestUtils.handleExceptionAsResponse(t, log);
 		}
-		return RestUtils.createResponseOK(response.toString());
+		return response;
 	}
 
 	/**

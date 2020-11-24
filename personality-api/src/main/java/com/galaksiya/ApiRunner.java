@@ -16,6 +16,7 @@ public class ApiRunner {
 
 	public static void main(String[] args) {
 		try {
+			DatabaseConnector.getInstance();
 			Server server = RestUtils.createServer();
 			WebAppContext root = RestUtils.createWebAppContext();
 			server.setHandler(root);

@@ -1,0 +1,22 @@
+<div class="main-question">
+	<mat-form-field appearance="outline" *ngIf="question.questionType === 'SINGLE_CHOICE'
+					|| question.questionType === 'CONDITIONAL_SINGLE_CHOICE'" fxFlex>
+		<mat-label>{{question.value}}</mat-label>
+		<mat-select [(ngModel)]="question.answer" (selectionChange)="updateQuestionStatus()">
+			<mat-option *ngFor="let option of question.options" [value]="option">
+				{{option}}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+	<div fxLayout="column" *ngIf="question.questionType === 'NUMBER_RANGE'" fxFlex>
+		<p>{{question.value}}</p>
+		<mat-slider color="primary" fxFlex [max]="question.range.to" [min]="question.range.from" [step]="1"
+					[thumbLabel]="true" [(ngModel)]="question.answer" style="margin-bottom:16px">
+		</mat-slider>
+	</div>
+</div>
+<div class="child-question"
+	 *ngIf="question.questionType === 'CONDITIONAL_SINGLE_CHOICE' && question.showChild">
+	<app-question [question]="question.child"></app-question>
+</div>

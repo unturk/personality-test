@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Complete your personality test</h2>
+<mat-dialog-content fxLayout="column" fxLayoutGap="16px">
+	<p>Please select a category to fill your personality test about!</p>
+	<mat-form-field appearance="outline" *ngIf="categories" fxFlex>
+		<mat-label>Category</mat-label>
+		<mat-select (selectionChange)="selectCategory($event)">
+			<mat-option *ngFor="let category of categories" [value]="category">
+				{{category.name}}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+	<div *ngIf="selectedCategory && questions" fxLayout="column">
+		<p>Please answer all the questions!</p>
+		<app-question *ngFor="let question of questions" [question]="question" style="margin-top:16px"></app-question>
+	</div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button mat-button mat-dialog-close>Cancel</button>
+	<button mat-button [disabled]="!questions" (click)="saveAnswers()">Save</button>
+</mat-dialog-actions>

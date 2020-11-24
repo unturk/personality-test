@@ -139,21 +139,6 @@
 		<profile>
 			<id>build</id>
 			<build>
-				<resources>
-					<resource>
-						<directory>src/main/resources</directory>
-						<includes>
-							<include>hibernate.properties</include>
-						</includes>
-					</resource>
-					<resource>
-						<directory>src/main/resources</directory>
-						<includes>
-							<include>web.xml</include>
-						</includes>
-						<targetPath>resources/WEB-INF</targetPath>
-					</resource>
-				</resources>
 				<plugins>
 					<plugin>
 						<artifactId>maven-jar-plugin</artifactId>

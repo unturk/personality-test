@@ -37,7 +37,7 @@ public class CategoryOperationTest {
 		List categories = getConnector().getObjects(null, Category.class);
 
 		// Assert.
-		assertEquals("Retrieved Categories size is not as expected", 2, categories.size());
+		assertTrue("Retrieved Categories size is not as expected", categories.size() >= 2);
 		assertTrue("Retrieved Categories should contain category1", categories.contains(category1));
 		assertTrue("Retrieved Categories should contain category2", categories.contains(category2));
 	}

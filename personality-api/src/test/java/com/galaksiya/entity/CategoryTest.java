@@ -4,12 +4,10 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.galaksiya.constants.JsonProperties.ID;
-import static com.galaksiya.constants.JsonProperties.NAME;
+import static com.galaksiya.constants.JsonProperties.*;
 import static com.galaksiya.utils.TestConstants.TEST_CAT_CODE_1;
 import static com.galaksiya.utils.TestConstants.TEST_CAT_NAME_1;
 import static org.junit.Assert.*;
-import static sun.plugin2.util.ParameterNames.CODE;
 
 public class CategoryTest {
 

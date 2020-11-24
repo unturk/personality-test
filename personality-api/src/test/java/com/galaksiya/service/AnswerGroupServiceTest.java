@@ -9,6 +9,8 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.eclipse.jetty.http.HttpStatus;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -83,11 +85,14 @@ public class AnswerGroupServiceTest extends JerseyTest {
 		Invocation.Builder request = target(String.format("answerGroups/%s/answers", answerGroup2.getId())).request();
 
 		// Execute.
-		JsonObject response = RestServiceTestUtility.sendGetRequest(request);
+		javax.ws.rs.core.Response response = request.get();
 
 		// Assert.
+		JsonObject responseJson = new JsonParser().parse(response.readEntity(String.class)).getAsJsonObject();
+		assertEquals("Response status is not as expected!", HttpStatus.INTERNAL_SERVER_ERROR_500,
+			response.getStatus());
 		assertEquals("Failure message is not as expected!", ErrorMessages.GET_ANSWERS_ERROR,
-			response.get(FAILURE).getAsString());
+			responseJson.get(FAILURE).getAsString());
 	}
 
 	@Test
@@ -103,7 +108,7 @@ public class AnswerGroupServiceTest extends JerseyTest {
 		JsonArray data = response.get(DATA).getAsJsonArray();
 		List<AnswerGroup> answerGroups = new Gson().fromJson(data, new TypeToken<List<AnswerGroup>>() {
 		}.getType());
-		assertEquals("Response categoryList size is not as expected!", 2, answerGroups.size());
+		assertTrue("Response categoryList size is not as expected!", answerGroups.size() >= 2);
 		assertTrue("Answer group list should contain saved answerGroup1", answerGroups.contains(answerGroup1));
 		assertTrue("Answer group list should contain saved answerGroup2", answerGroups.contains(answerGroup2));
 	}
@@ -129,6 +134,7 @@ public class AnswerGroupServiceTest extends JerseyTest {
 	@Test
 	public void getAnswerGroups_noData() {
 		// Setup.
+		DatabaseConnector.getInstance().deleteObject(answer);
 		DatabaseConnector.getInstance().deleteObject(answerGroup1);
 		DatabaseConnector.getInstance().deleteObject(answerGroup2);
 		Invocation.Builder request = target("answerGroups").request();

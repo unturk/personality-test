@@ -1,0 +1,6 @@
+version: '3.4'
+services:
+    personality-web:
+        image: personality-web
+        ports:
+            - "8000:80"

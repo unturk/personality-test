@@ -12,7 +12,6 @@ import com.galaksiya.logger.GLogger;
 import com.galaksiya.logger.OperationLog;
 import com.galaksiya.utils.EntityUtils;
 import com.galaksiya.utils.RestUtils;
-import com.google.gson.JsonObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -35,7 +34,7 @@ public class AnswerGroupService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAnswerGroups(@QueryParam(USER_KEY) String userKey, @Context HttpServletRequest request) {
-		JsonObject response = new JsonObject();
+		Response response;
 		OperationLog log = logger.startOperation("getAnswerGroups")
 			.addField(IP_ADDRESS, RestUtils.getIpAddress(request)).addField(USER_KEY, userKey);
 		try {
@@ -43,23 +42,22 @@ public class AnswerGroupService {
 				.getObjects(new GQueryFilter(new GQueryFilterPart(USER_KEY).setOperator(Operators.EQUAL, userKey)),
 					AnswerGroup.class);
 			if (answerGroups != null) {
-				response.addProperty(SUCCESS, true);
-				response.add(DATA, EntityUtils.convertEntityToJsonArray(answerGroups));
+				response = RestUtils.createResponseOK(EntityUtils.convertEntityToJsonArray(answerGroups));
 				log.succeed();
 			} else {
 				throw new ServiceFailureException(ErrorMessages.GET_ANSWER_GROUPS_ERROR);
 			}
 		} catch (Throwable t) {
-			response = RestUtils.handleException(t, log);
+			response = RestUtils.handleExceptionAsResponse(t, log);
 		}
-		return RestUtils.createResponseOK(response.toString());
+		return response;
 	}
 
 	@GET
 	@Path("{id}/answers")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAnswersOfAnswerGroup(@PathParam (ID) int answerGroupId, @Context HttpServletRequest request) {
-		JsonObject response = new JsonObject();
+		Response response;
 		OperationLog log = logger.startOperation("getAnswersOfAnswerGroup")
 			.addField(IP_ADDRESS, RestUtils.getIpAddress(request)).addField(ID, answerGroupId);
 		try {
@@ -67,16 +65,15 @@ public class AnswerGroupService {
 				.getObjects(new GQueryFilter(new GQueryFilterPart("answerGroup.id").setOperator(Operators.EQUAL,
 					answerGroupId)), Answer.class);
 			if (answers != null && answers.size() != 0) {
-				response.addProperty(SUCCESS, true);
-				response.add(DATA, EntityUtils.convertEntityToJsonArray(answers));
+				response = RestUtils.createResponseOK(EntityUtils.convertEntityToJsonArray(answers));
 				log.succeed();
 			} else {
 				throw new ServiceFailureException(ErrorMessages.GET_ANSWERS_ERROR);
 			}
 		} catch (Throwable t) {
-			response = RestUtils.handleException(t, log);
+			response = RestUtils.handleExceptionAsResponse(t, log);
 		}
-		return RestUtils.createResponseOK(response.toString());
+		return response;
 	}
 
 }

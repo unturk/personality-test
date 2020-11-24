@@ -32,7 +32,7 @@ public class Question implements Serializable, HibernateEntity {
 	 * Field that represents exact value of Question.
 	 */
 	@Expose
-	@Column(name = "\"value\"", unique = true, nullable = false)
+	@Column(name = "\"value\"", nullable = false)
 	private String value;
 
 	/**

@@ -38,7 +38,7 @@ public class AnswerGroupOperationTest {
 		List answerGroups = getConnector().getObjects(null, AnswerGroup.class);
 
 		// Assert.
-		assertEquals("Retrieved answer groups size is not as expected", 2, answerGroups.size());
+		assertTrue("Retrieved answer groups size is not as expected", answerGroups.size() >= 2);
 		assertTrue("Retrieved answer groups should contain category1", answerGroups.contains(answerGroup1));
 		assertTrue("Retrieved answer groups should contain category2", answerGroups.contains(answerGroup2));
 	}

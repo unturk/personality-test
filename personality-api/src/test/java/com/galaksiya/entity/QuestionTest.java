@@ -7,7 +7,6 @@ import org.junit.Test;
 import static com.galaksiya.constants.JsonProperties.*;
 import static com.galaksiya.utils.TestConstants.*;
 import static org.junit.Assert.*;
-import static sun.plugin2.util.ParameterNames.CODE;
 
 public class QuestionTest {
 

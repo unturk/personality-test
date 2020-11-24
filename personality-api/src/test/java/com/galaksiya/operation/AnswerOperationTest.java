@@ -47,7 +47,7 @@ public class AnswerOperationTest {
 		List answers = getConnector().getObjects(null, Answer.class);
 
 		// Assert.
-		assertEquals("Retrieved answers size is not as expected", 2, answers.size());
+		assertTrue("Retrieved answers size is not as expected", answers.size() >= 2);
 		assertTrue("Retrieved answers should contain question", answers.contains(answer1));
 		assertTrue("Retrieved answers should contain childQuestion", answers.contains(answer2));
 	}

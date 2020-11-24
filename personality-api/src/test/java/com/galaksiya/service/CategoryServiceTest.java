@@ -8,6 +8,8 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.eclipse.jetty.http.HttpStatus;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -56,7 +58,7 @@ public class CategoryServiceTest extends JerseyTest {
 		JsonArray data = response.get(DATA).getAsJsonArray();
 		List<Category> categories = new Gson().fromJson(data, new TypeToken<List<Category>>() {
 		}.getType());
-		assertEquals("Response categoryList size is not as expected!", 1, categories.size());
+		assertTrue("Response categoryList size is not as expected!", categories.size() >= 1);
 		assertTrue("Category list should contain saved category", categories.contains(category));
 	}
 
@@ -66,10 +68,12 @@ public class CategoryServiceTest extends JerseyTest {
 		Invocation.Builder request = target("categories").request();
 
 		// Execute.
-		JsonObject response = RestServiceTestUtility.sendGetRequest(request);
+		javax.ws.rs.core.Response response = request.get();
 
 		// Assert.
+		JsonObject responseJson = new JsonParser().parse(response.readEntity(String.class)).getAsJsonObject();
+		assertEquals("Response status is not as expected!", HttpStatus.INTERNAL_SERVER_ERROR_500, response.getStatus());
 		assertEquals("Failure message is not as expected!", ErrorMessages.GET_CATEGORIES_ERROR,
-			response.get(FAILURE).getAsString());
+			responseJson.get(FAILURE).getAsString());
 	}
 }

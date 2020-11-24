@@ -10,6 +10,8 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.eclipse.jetty.http.HttpStatus;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -70,7 +72,7 @@ public class QuestionServiceTest extends JerseyTest {
 		JsonArray data = response.get(DATA).getAsJsonArray();
 		List<Question> questions = new Gson().fromJson(data, new TypeToken<List<Question>>() {
 		}.getType());
-		assertEquals("Response questionList size is not as expected!", 2, questions.size());
+		assertTrue("Response questionList size is not as expected!", questions.size() >= 2);
 		assertTrue("Question list should contain saved question1", questions.contains(question1));
 		assertTrue("Question list should contain saved question2", questions.contains(question2));
 	}
@@ -99,10 +101,12 @@ public class QuestionServiceTest extends JerseyTest {
 		Invocation.Builder request = target("questions").queryParam(CATEGORY, Integer.MAX_VALUE).request();
 
 		// Execute.
-		JsonObject response = RestServiceTestUtility.sendGetRequest(request);
+		javax.ws.rs.core.Response response = request.get();
 
 		// Assert.
+		JsonObject responseJson = new JsonParser().parse(response.readEntity(String.class)).getAsJsonObject();
+		assertEquals("Response status is not as expected!", HttpStatus.INTERNAL_SERVER_ERROR_500, response.getStatus());
 		assertEquals("Failure message is not as expected!", ErrorMessages.GET_QUESTIONS_ERROR,
-			response.get(FAILURE).getAsString());
+			responseJson.get(FAILURE).getAsString());
 	}
 }

@@ -1,0 +1,264 @@
+openapi: 3.0.0
+info:
+    version: '1.0.0'
+    title: 'Personality Test API'
+    description: 'Personality Test openAPI'
+host: localhost
+servers:
+    - description: Local
+      url: http://localhost:8080/api
+paths:
+    /categories:
+        get:
+            summary: "Fetches all saved categories in the system."
+            responses:
+                "200":
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        description: Returns true if the result is successful
+                                    data:
+                                        type: array
+                                        items:
+                                            type: object
+                                            $ref: '#/components/objects/Category'
+                "500":
+                    description: Service failure response
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    failure:
+                                        type: string
+                                        description: Failure message indicating the service failure.
+
+    /questions:
+        get:
+            summary: "Fetches all saved questions in the system."
+            parameters:
+                - name: category
+                  in: query
+                  description: "Category id of the question"
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        description: Returns true if the result is successful
+                                    data:
+                                        type: array
+                                        items:
+                                            type: object
+                                            $ref: '#/components/objects/Question'
+                "500":
+                    description: Service failure response
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    failure:
+                                        type: string
+                                        description: Failure message indicating the service failure.
+
+    /answers:
+        post:
+            summary: "Fetches all saved answer groups in the system."
+            parameters:
+                - name: data
+                  in: body
+                  description: "String representation of JsonObject data which includes answers to save"
+                  schema:
+                      type: object
+                      $ref: '#/components/objects/AnswerDataObj'
+            responses:
+                "200":
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        description: Returns true if the result is successful
+                                    data:
+                                        type: array
+                                        items:
+                                            type: object
+                                            $ref: '#/components/objects/AnswerGroup'
+                "500":
+                    description: Service failure response
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    failure:
+                                        type: string
+                                        description: Failure message indicating the service failure.
+
+    /answerGroups:
+        get:
+            summary: "Fetches all saved answer groups in the system."
+            parameters:
+                - name: userKey
+                  in: query
+                  description: "Key that answer group is saved with"
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        description: Returns true if the result is successful
+                                    data:
+                                        type: array
+                                        items:
+                                            type: object
+                                            $ref: '#/components/objects/AnswerGroup'
+                "500":
+                    description: Service failure response
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    failure:
+                                        type: string
+                                        description: Failure message indicating the service failure.
+
+    /answerGroups/{id}/answers:
+        get:
+            summary: "Used for sending the answers to the back-end for saving them into db."
+            parameters:
+                - name: id
+                  in: path
+                  description: "Identifier of the answer group to fetch answers of."
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Successful response
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        description: Returns true if the result is successful
+                                    data:
+                                        type: array
+                                        items:
+                                            type: object
+                                            $ref: '#/components/objects/Answer'
+                "500":
+                    description: Service failure response
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    failure:
+                                        type: string
+                                        description: Failure message indicating the service failure.
+
+
+components:
+
+    objects:
+        AnswerGroup:
+            type: object
+            properties:
+                id:
+                    type: number
+                userKey:
+                    type: string
+                date:
+                    type: number
+                    description: Date in millis format.
+        Category:
+            type: object
+            properties:
+                id:
+                    type: number
+                name:
+                    type: string
+                code:
+                    type: string
+        Question:
+            type: object
+            properties:
+                id:
+                    type: number
+                value:
+                    type: string
+                category:
+                    type: object
+                    $ref: '#/components/objects/Category'
+                child:
+                    type: object
+                    $ref: '#/components/objects/Question'
+                details:
+                    type: string
+                questionType:
+                    type: string
+                    enum:
+                        - SINGLE_CHOICE
+                        - CONDITIONAL_SINGLE_CHOICE
+                        - NUMBER_RANGE
+        Answer:
+            type: object
+            properties:
+                id:
+                    type: number
+                value:
+                    type: string
+                    desc: Represents the answer value.
+                question:
+                    type: object
+                    $ref: '#/components/objects/Question'
+                answerGroup:
+                    type: object
+                    $ref: '#/components/objects/AnswerGroup'
+        AnswerDataObj:
+            type: object
+            properties:
+                answers:
+                    type: array
+                    required: true
+                    items:
+                        type: object
+                        properties:
+                            question:
+                                type: object
+                                properties:
+                                    id:
+                                        type: integer
+                            value:
+                                type: string
+                userKey:
+                    type: string
+                    required: false
+
+

@@ -1,0 +1,28 @@
+version: '3.4'
+services:
+    data:
+        image: postgres:latest
+        volumes:
+            - "/var/lib/postgresql"
+        command: "true"
+    postgres:
+        image: postgres:latest
+        ports:
+            - "5432:5432"
+        volumes_from:
+            -   data
+        volumes:
+            - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
+        depends_on:
+            -   data
+        environment:
+            - POSTGRES_USER=galaksiya
+            - POSTGRES_PASSWORD=galaksiya
+            - POSTGRES_DB=personality_test
+    personality-api:
+        image: personality-api
+        ports:
+            - "8080:8080"
+        network_mode: "host"
+        depends_on:
+            -   postgres

@@ -46,8 +46,24 @@ public class RestUtils {
 	 * @param object Response's status(200)'s entity parameter.
 	 * @return Response status code 200 with entity object.
 	 */
-	public static Response createResponseOK(Object object) {
-		return Response.status(HttpStatus.OK_200).entity(object).build();
+	public static Response createResponseOK(JsonElement object) {
+		final JsonObject response = new JsonObject();
+		response.addProperty(SUCCESS, true);
+		if (object != null) {
+			response.add(DATA, object);
+		}
+		return createResponse(response.toString(), Response.Status.OK);
+	}
+
+	public static Response handleExceptionAsResponse(Throwable t, OperationLog operationLog) {
+		JsonObject jsonResponse = handleException(t, operationLog);
+		int statusCode = jsonResponse.has(STATUS) ? jsonResponse.get(STATUS).getAsInt() : Response.Status.INTERNAL_SERVER_ERROR
+			.getStatusCode();
+		return createResponse(jsonResponse.toString(), Response.Status.fromStatusCode(statusCode));
+	}
+
+	public static Response createResponse(Object entity, Response.Status status) {
+		return Response.status(status).entity(entity).build();
 	}
 
 	/**
@@ -113,8 +129,8 @@ public class RestUtils {
 	 * @return failure message as String.
 	 */
 	public static JsonObject handleException(Throwable t, OperationLog log) {
-		String msg = "";
-		JsonObject response = new JsonObject();
+		String msg = UNEXPECTED_ERROR;
+		int status = Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
 
 		if (t instanceof ServiceFailureException) {
 			ServiceFailureException serviceFailure = (ServiceFailureException) t;
@@ -132,14 +148,15 @@ public class RestUtils {
 			}
 		} else if (t instanceof JsonSyntaxException) {
 			msg = INCOMPATIBLE_JSON_FORMAT_MSG;
-		} else {
-			msg = UNEXPECTED_ERROR;
 		}
 
 		if (log != null) {
 			log.addField(REASON, msg).fail(t);
 		}
+
+		JsonObject response = new JsonObject();
 		response.addProperty(FAILURE, msg);
+		response.addProperty(STATUS, status);
 		return response;
 	}
 
